@@ -1,10 +1,9 @@
 import { Server } from "http";
 import mongoose from "mongoose";
 import { envVars } from "./app/config/env";
-import express from 'express'
+import app from "./app";
 
 let server: Server;
-const app = express()
 
 const startServer = async () => {
     try {
