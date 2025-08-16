@@ -1,5 +1,5 @@
 import { model, Schema } from "mongoose";
-import { ActiveStatus, ApprovalStatus, IUser, UserRole, VehicleInfo } from "./rider.interface";
+import { ActiveStatus, ApprovalStatus, IRider, RiderRole, VehicleInfo } from "./rider.interface";
 
 
 const vehicleInfoSchema = new Schema<VehicleInfo>({
@@ -9,7 +9,7 @@ const vehicleInfoSchema = new Schema<VehicleInfo>({
 });
 
 
-const userSchema = new Schema<IUser>({
+const riderSchema = new Schema<IRider>({
     name: {
         type: String,
         required: true,
@@ -27,7 +27,7 @@ const userSchema = new Schema<IUser>({
     },
     role: {
         type: String,
-        enum: Object.values(UserRole),
+        enum: Object.values(RiderRole),
         required: true
     },
     isBlocked: {
@@ -49,7 +49,7 @@ const userSchema = new Schema<IUser>({
     vehicleInfo: {
         type: vehicleInfoSchema,
         required: function () {
-            return this.role === UserRole.DRIVER;
+            return this.role === RiderRole.DRIVER;
         },
     }
 
@@ -59,4 +59,4 @@ const userSchema = new Schema<IUser>({
 })
 
 
-export const User = model<IUser>("User", userSchema)
+export const Rider = model<IRider>("Rider", riderSchema)

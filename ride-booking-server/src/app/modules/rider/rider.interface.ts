@@ -1,5 +1,5 @@
 
-export enum UserRole {
+export enum RiderRole {
     ADMIN = "ADMIN",
     RIDER = "RIDER",
     DRIVER = "DRIVER"
@@ -23,11 +23,11 @@ export interface VehicleInfo {
     plateNumber: string;
 }
 
-export interface IUser {
+export interface IRider {
     name: string;
     email: string;
     password?: string;
-    role: UserRole;
+    role: RiderRole;
     isBlocked?: boolean;
     createdAt?: Date;
 

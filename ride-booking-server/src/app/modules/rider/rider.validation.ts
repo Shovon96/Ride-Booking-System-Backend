@@ -1,5 +1,5 @@
 import z from "zod";
-import { ActiveStatus, ApprovalStatus, UserRole } from "./rider.interface";
+import { ActiveStatus, ApprovalStatus, RiderRole } from "./rider.interface";
 
 export const vehicleInfoSchema = z.object({
     license: z.string()
@@ -9,7 +9,7 @@ export const vehicleInfoSchema = z.object({
         .min(3, { message: "Plate number must be at least 3 characters long" })
 });
 
-export const userValidationSchema = z.object({
+export const createRiderZodSchema = z.object({
     name: z.string()
         .min(2, { message: "Name is required must at least 2 character" })
         .max(40, { message: "Name is maximum 40 character" }),
@@ -26,7 +26,7 @@ export const userValidationSchema = z.object({
             message: "Password must contain at least 1 number.",
         })
         .optional(),
-    role: z.enum(Object.values(UserRole) as [string])
+    role: z.enum(Object.values(RiderRole) as [string])
         .transform((val) => val.toUpperCase())
         .optional(),
 

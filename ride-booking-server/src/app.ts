@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { envVars } from './app/config/env'
 import notFound from './app/middleware/notFound.route'
+import { router } from './app/routers'
 
 const app = express()
 
@@ -11,6 +12,9 @@ app.use(cors({
     origin: envVars.FRONTEND_URL,
     credentials: true
 }))
+
+// Routes
+app.use('/api', router)
 
 app.get('/', (req: Request, res: Response) => {
     res.status(200).json({
