@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { envVars } from './app/config/env'
+import notFound from './app/middleware/notFound.route'
 
 const app = express()
 
@@ -16,5 +17,8 @@ app.get('/', (req: Request, res: Response) => {
         message: 'welcome to the ride booking server'
     })
 })
+
+app.use(notFound)
+
 
 export default app

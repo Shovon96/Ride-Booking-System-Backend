@@ -17,6 +17,41 @@ const startServer = async () => {
     }
 }
 
-
+// (async () => {
+//     await connectRedis()
+//     await startServer()
+//     await seedSuperAdmin()
+// })()
 
 startServer()
+
+process.on("unhandledRejection", (error) => {
+    console.log('Unhandle Rejection...', error)
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        })
+    }
+    process.exit(1)
+})
+
+
+process.on("uncaughtException", (error) => {
+    console.log('Uncaught Exception Rejection...', error)
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        })
+    }
+    process.exit(1)
+})
+
+process.on("SIGTERM", () => {
+    console.log('Sigterm Exception Rejection...')
+    if (server) {
+        server.close(() => {
+            process.exit(1)
+        })
+    }
+    process.exit(1)
+})
