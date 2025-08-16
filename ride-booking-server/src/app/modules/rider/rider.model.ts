@@ -1,0 +1,62 @@
+import { model, Schema } from "mongoose";
+import { ActiveStatus, ApprovalStatus, IUser, UserRole, VehicleInfo } from "./rider.interface";
+
+
+const vehicleInfoSchema = new Schema<VehicleInfo>({
+    license: { type: String, required: true },
+    model: { type: String, required: true },
+    plateNumber: { type: String, required: true },
+});
+
+
+const userSchema = new Schema<IUser>({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        minlength: [6, 'Password must be at least 6 characters long'],
+    },
+    role: {
+        type: String,
+        enum: Object.values(UserRole),
+        required: true
+    },
+    isBlocked: {
+        type: Boolean
+    },
+    createdAt: {
+        type: Date
+    },
+
+    // driver??
+    isAvailable: {
+        type: String,
+        enum: Object.values(ActiveStatus)
+    },
+    approvalStatus: {
+        type: String,
+        enum: Object.values(ApprovalStatus)
+    },
+    vehicleInfo: {
+        type: vehicleInfoSchema,
+        required: function () {
+            return this.role === UserRole.DRIVER;
+        },
+    }
+
+}, {
+    timestamps: true,
+    versionKey: false
+})
+
+
+export const User = model<IUser>("User", userSchema)
