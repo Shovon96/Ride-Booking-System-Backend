@@ -12,7 +12,10 @@ interface EnvConfig {
     JWT_REFRESH_EXPIRES: string,
     EXPRESS_SESSION_SECRET: string,
     FRONTEND_URL: string,
-    BCRYPT_SALT_ROUND: string
+    BCRYPT_SALT_ROUND: string,
+    GOOGLE_CLIENT_SECRET: string,
+    GOOGLE_CLIENT_ID: string,
+    GOOGLE_CALLBACK_URL: string,
 }
 
 
@@ -27,7 +30,10 @@ const loadEnvVariables = (): EnvConfig => {
         "JWT_REFRESH_EXPIRES",
         "EXPRESS_SESSION_SECRET",
         "FRONTEND_URL",
-        "BCRYPT_SALT_ROUND"
+        "BCRYPT_SALT_ROUND",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CALLBACK_URL",
     ]
 
     requiredEnvVariables.forEach(key => {
@@ -46,7 +52,10 @@ const loadEnvVariables = (): EnvConfig => {
         JWT_REFRESH_EXPIRES: process.env.JWT_REFRESH_EXPIRES as string,
         EXPRESS_SESSION_SECRET: process.env.EXPRESS_SESSION_SECRET as string,
         FRONTEND_URL: process.env.FRONTEND_URL as string,
-        BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string
+        BCRYPT_SALT_ROUND: process.env.BCRYPT_SALT_ROUND as string,
+        GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
+        GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
+        GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL as string
     }
 }
 

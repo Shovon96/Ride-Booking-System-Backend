@@ -6,6 +6,8 @@ import { router } from './app/routers'
 import { globalErrorHandler } from './app/middleware/globalError'
 import cookieParser from 'cookie-parser'
 import expressSession from 'express-session'
+import passport from 'passport'
+import './app/config/passport'
 
 const app = express()
 
@@ -15,6 +17,8 @@ app.use(expressSession({
     resave: false,
     saveUninitialized: false
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.json())
 app.use(cors({
     origin: envVars.FRONTEND_URL,

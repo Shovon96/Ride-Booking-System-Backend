@@ -6,6 +6,8 @@ import statusCode from 'http-status-codes'
 import { AuthService } from "./auth.service"
 import AppError from "../../errorHandle/appError"
 import { JwtPayload } from "jsonwebtoken"
+import { createRiderTokens } from "../../utils/userToken"
+import { envVars } from "../../config/env"
 
 const creadentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await AuthService.creadentialsLogin(req.body)
@@ -77,10 +79,31 @@ const changePassword = catchAsync(async (req: Request, res: Response, next: Next
     })
 })
 
+const googleCallbackController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    let redirectTo = req.query.state ? req.query.state as string : ""
+    if (redirectTo.startsWith("/")) {
+        redirectTo = redirectTo.slice(1)
+    }
+
+    const user = req.user;
+
+    if (!user) {
+        throw new AppError(statusCode.NOT_FOUND, "User Not Found")
+    }
+
+    const tokenInfo = createRiderTokens(user)
+
+    setAuthCookie(res, tokenInfo)
+
+    res.redirect(`${envVars.FRONTEND_URL}/${redirectTo}`)
+})
+
 
 export const AuthController = {
     creadentialsLogin,
     getNewAccessToken,
     logout,
-    changePassword
+    changePassword,
+    googleCallbackController
 }
