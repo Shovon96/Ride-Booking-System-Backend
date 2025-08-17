@@ -3,6 +3,7 @@ import cors from 'cors'
 import { envVars } from './app/config/env'
 import notFound from './app/middleware/notFound.route'
 import { router } from './app/routers'
+import { globalErrorHandler } from './app/middleware/globalError'
 
 const app = express()
 
@@ -21,6 +22,8 @@ app.get('/', (req: Request, res: Response) => {
         message: 'welcome to the ride booking server'
     })
 })
+
+app.use(globalErrorHandler)
 
 app.use(notFound)
 
