@@ -3,9 +3,15 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import statusCode from "http-status-codes"
 import { RiderService } from "./rider.service";
+import { createRiderTokens } from "../../utils/userToken";
+import { setAuthCookie } from "../../utils/setCookie";
 
 const registetionRider = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const rider = await RiderService.registetionRider(req.body);
+    // set cookie
+    const tokens = createRiderTokens(rider);
+    setAuthCookie(res, tokens);
+
     sendResponse(res, {
         statusCode: statusCode.CREATED,
         success: true,
