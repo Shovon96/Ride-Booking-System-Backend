@@ -28,7 +28,7 @@ const riderSchema = new Schema<IRider>({
     role: {
         type: String,
         enum: Object.values(RiderRole),
-        required: true
+        default: RiderRole.RIDER
     },
     isBlocked: {
         type: Boolean
