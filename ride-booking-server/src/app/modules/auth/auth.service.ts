@@ -4,6 +4,8 @@ import { Rider } from "../rider/rider.model"
 import statusCode from 'http-status-codes'
 import bcrypt from 'bcryptjs'
 import { createNewAccessTokenWithRefreshToken, createRiderTokens } from "../../utils/userToken"
+import { JwtPayload } from "jsonwebtoken"
+import { envVars } from "../../config/env"
 
 const creadentialsLogin = async (payload: Partial<IRider>) => {
     const { email, password } = payload
@@ -30,15 +32,29 @@ const creadentialsLogin = async (payload: Partial<IRider>) => {
 
 }
 
-const getNewAccessToken=async(refreshToken:string)=>{
-    
-   const newAccessToken=await createNewAccessTokenWithRefreshToken(refreshToken)
-   return {
-    accessToken:newAccessToken
-   }
-} 
+const getNewAccessToken = async (refreshToken: string) => {
 
-export const Authservice = {
+    const newAccessToken = await createNewAccessTokenWithRefreshToken(refreshToken)
+    return {
+        accessToken: newAccessToken
+    }
+}
+
+const changePassword = async (newPassword: string, oldPassword: string, decodedToken: JwtPayload) => {
+
+    const user = await Rider.findById(decodedToken.riderId);
+    const isOldPasswordMatch = await bcrypt.compare(oldPassword, user!.password as string)
+
+    if (!isOldPasswordMatch) {
+        throw new AppError(statusCode.UNAUTHORIZED, "Old password does not matched!")
+    }
+
+    user!.password = await bcrypt.hash(newPassword, Number(envVars.BCRYPT_SALT_ROUND))
+    user!.save()
+}
+
+export const AuthService = {
     creadentialsLogin,
-    getNewAccessToken
+    getNewAccessToken,
+    changePassword
 }

@@ -31,6 +31,7 @@ export interface IRider {
     password?: string;
     role: RiderRole;
     isBlocked?: boolean;
+    isVerified?: boolean;
     createdAt?: Date;
 
     // Driver-specific fields

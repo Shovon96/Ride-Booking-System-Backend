@@ -3,11 +3,12 @@ import { catchAsync } from "../../utils/catchAsync"
 import { setAuthCookie } from "../../utils/setCookie"
 import { sendResponse } from "../../utils/sendResponse"
 import statusCode from 'http-status-codes'
-import { Authservice } from "./auth.service"
+import { AuthService } from "./auth.service"
 import AppError from "../../errorHandle/appError"
+import { JwtPayload } from "jsonwebtoken"
 
 const creadentialsLogin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const result = await Authservice.creadentialsLogin(req.body)
+    const result = await AuthService.creadentialsLogin(req.body)
 
     setAuthCookie(res, result)
 
@@ -26,7 +27,7 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
         throw new AppError(statusCode.BAD_REQUEST, "No token recived from cookies")
     }
 
-    const tokenInfo = await Authservice.getNewAccessToken(refreshToken)
+    const tokenInfo = await AuthService.getNewAccessToken(refreshToken)
 
     setAuthCookie(res, tokenInfo)
 
@@ -38,31 +39,48 @@ const getNewAccessToken = catchAsync(async (req: Request, res: Response, next: N
     })
 })
 
-const logout=catchAsync(async(req: Request, res: Response, next: NextFunction)=>{
-  
-    res.clearCookie("accessToken",{
-        httpOnly:true,
-        secure:false,
-        sameSite:"lax"
+const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
     })
 
-    res.clearCookie("refreshToken",{
-        httpOnly:true,
-        secure:false,
-        sameSite:"lax"
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax"
     })
 
-     sendResponse(res, {
+    sendResponse(res, {
         success: true,
         statusCode: statusCode.ACCEPTED,
-        message: "User logout   Successfully",
+        message: "User logout Successfully",
+        data: null,
+    })
+})
+
+const changePassword = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+
+    const newPassword = req.body.newPassword;
+    const oldPassword = req.body.oldPassword;
+    const decodedToken = req.user;
+
+    await AuthService.changePassword(newPassword, oldPassword, decodedToken as JwtPayload)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.OK,
+        message: "Password Changed Successfully!",
         data: null,
     })
 })
 
 
-export const AuthContoller = {
+export const AuthController = {
     creadentialsLogin,
     getNewAccessToken,
-    logout
+    logout,
+    changePassword
 }

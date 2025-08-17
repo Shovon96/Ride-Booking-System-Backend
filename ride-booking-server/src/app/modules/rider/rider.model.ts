@@ -33,6 +33,7 @@ const riderSchema = new Schema<IRider>({
     isBlocked: {
         type: Boolean
     },
+    isVerified: { type: Boolean },
     createdAt: {
         type: Date
     },
