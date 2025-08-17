@@ -3,7 +3,7 @@ import { IRider } from "../rider/rider.interface"
 import { Rider } from "../rider/rider.model"
 import statusCode from 'http-status-codes'
 import bcrypt from 'bcryptjs'
-import { createRiderTokens } from "../../utils/userToken"
+import { createNewAccessTokenWithRefreshToken, createRiderTokens } from "../../utils/userToken"
 
 const creadentialsLogin = async (payload: Partial<IRider>) => {
     const { email, password } = payload
@@ -30,7 +30,15 @@ const creadentialsLogin = async (payload: Partial<IRider>) => {
 
 }
 
+const getNewAccessToken=async(refreshToken:string)=>{
+    
+   const newAccessToken=await createNewAccessTokenWithRefreshToken(refreshToken)
+   return {
+    accessToken:newAccessToken
+   }
+} 
 
 export const Authservice = {
-    creadentialsLogin
+    creadentialsLogin,
+    getNewAccessToken
 }
