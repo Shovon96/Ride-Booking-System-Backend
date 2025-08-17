@@ -40,7 +40,8 @@ const riderSchema = new Schema<IRider>({
     // driver??
     isAvailable: {
         type: String,
-        enum: Object.values(ActiveStatus)
+        enum: Object.values(ActiveStatus),
+        default: ActiveStatus.ACTIVE
     },
     approvalStatus: {
         type: String,

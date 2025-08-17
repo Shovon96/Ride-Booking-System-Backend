@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 
 export enum RiderRole {
     ADMIN = "ADMIN",
@@ -24,6 +25,7 @@ export interface VehicleInfo {
 }
 
 export interface IRider {
+    _id?: Types.ObjectId;
     name: string;
     email: string;
     password?: string;

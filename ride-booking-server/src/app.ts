@@ -4,15 +4,23 @@ import { envVars } from './app/config/env'
 import notFound from './app/middleware/notFound.route'
 import { router } from './app/routers'
 import { globalErrorHandler } from './app/middleware/globalError'
+import cookieParser from 'cookie-parser'
+import expressSession from 'express-session'
 
 const app = express()
 
 // Middlewares
+app.use(expressSession({
+    secret: envVars.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
 app.use(express.json())
 app.use(cors({
     origin: envVars.FRONTEND_URL,
     credentials: true
 }))
+app.use(cookieParser())
 
 // Routes
 app.use('/api', router)
