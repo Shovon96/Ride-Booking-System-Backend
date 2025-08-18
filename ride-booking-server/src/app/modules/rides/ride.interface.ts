@@ -1,42 +1,55 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
+
+export interface ILocation {
+    lat: number;
+    lng: number;
+    address?: string;
+}
 
 export enum RideStatus {
-    REQUESTED = "REQUESTED",
-    ACCEPTED = "ACCEPTED",
-    PIC_UP = "PICK_UP",
-    IN_TRANSIT = "IN_TRANSIT",
-    COMPLETED = "COMPLETED",
-    CANCELLED = "CANCELLED",
+    Requested = 'requested',
+    Accepted = 'accepted',
+    PickedUp = 'picked_up',
+    InTransit = 'in_transit',
+    Completed = 'completed',
+    CancelledByRider = 'cancelled_by_rider',
+    CancelledByDriver = 'cancelled_by_driver',
 }
 
-export enum PaymentMethod {
-    CASH = "CASH",
-    BKASH = "BKASH",
-    NAGAD = "NAGAD",
-    CARD = "CARD",
-}
 
-export enum paymentStatus {
-    UNPAID = "UNPAID",
-    PENDING = "PENDING",
-    PAID = "PAID",
-    FAILED = "FAILED",
+
+export interface IRideTimeline {
+    requestedAt?: Date;
+    acceptedAt?: Date;
+    pickedUpAt?: Date;
+    completedAt?: Date;
+    cancelledAt?: Date;
 }
 
 export interface IRide {
     _id?: string;
+
     rider: Types.ObjectId;
-    driver?: Types.ObjectId;
-    pickupLocation: string;
-    dropoffLocation: string;
-    fare: number;
-    distance?: string;
-    estimatedTime?: string;
-    rideStatus?: RideStatus;
-    paymentMethod: PaymentMethod;
-    paymentStatus?: paymentStatus;
-    isPaid?: boolean;
-    startTime?: Date;
-    endTime?: Date;
+    driver?: Types.ObjectId | null;
+
+    status:
+    | 'requested'
+    | 'accepted'
+    | 'picked_up'
+    | 'in_transit'
+    | 'completed'
+    | 'cancelled_by_rider'
+    | 'cancelled_by_driver';
+
+    pickupLocation: ILocation;
+    destinationLocation: ILocation;
+
+    fare?: number;
+
+    cancelledBy?: 'rider' | 'driver' | 'admin';
+
+    rideTimeline?: IRideTimeline;
+
     createdAt?: Date;
+    updatedAt?: Date;
 }

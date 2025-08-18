@@ -19,4 +19,4 @@ router.patch('/:id', validateRequest(updateRiderZodSchema), checkAuth(...Object.
 
 router.delete('/:id', checkAuth(...Object.values(RiderRole)), RiderController.deleteUser)
 
-export const UserRoutes = router;
+export const RiderRoutes = router;
