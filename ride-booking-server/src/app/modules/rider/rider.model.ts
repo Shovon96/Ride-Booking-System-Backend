@@ -50,9 +50,9 @@ const riderSchema = new Schema<IRider>({
     },
     vehicleInfo: {
         type: vehicleInfoSchema,
-        required: function () {
-            return this.role === RiderRole.DRIVER;
-        },
+        // required: function () {
+        //     return this.role === RiderRole.DRIVER;
+        // },
     }
 
 }, {

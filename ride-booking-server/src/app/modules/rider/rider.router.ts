@@ -11,4 +11,6 @@ router.post('/register', validateRequest(createRiderZodSchema), RiderController.
 
 router.get('/my-profile', checkAuth(...Object.values(RiderRole)), RiderController.myProfile)
 
+router.get('/all-users', checkAuth(RiderRole.ADMIN), RiderController.getAllUsers)
+
 export const UserRoutes = router;

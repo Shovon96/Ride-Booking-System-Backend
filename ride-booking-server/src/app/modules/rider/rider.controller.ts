@@ -33,8 +33,21 @@ const myProfile = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+    const result = await RiderService.getAllUsers()
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.CREATED,
+        message: "All Users Retrieved Successfully",
+        data: result.data,
+        meta: result.meta
+    })
+})
+
 
 export const RiderController = {
     registetionRider,
-    myProfile
+    myProfile,
+    getAllUsers
 }

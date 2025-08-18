@@ -1,4 +1,4 @@
-import { IRider } from "./rider.interface";
+import { IRider, RiderRole } from "./rider.interface";
 import { Rider } from "./rider.model";
 import { envVars } from "../../config/env";
 import bcrypt from 'bcryptjs'
@@ -19,14 +19,13 @@ const registetionRider = async (payload: Partial<IRider>) => {
     const rider = await Rider.create({
         email,
         password: hashedPassword,
-        // role: role?.toUpperCase(),
+        role,
         ...rest
     })
 
     return rider
 
 }
-
 
 const myProfile = async (userId: string) => {
     const user = await Rider.findById(userId).select("-password")
@@ -36,7 +35,19 @@ const myProfile = async (userId: string) => {
     return { data: user }
 }
 
+const getAllUsers = async () => {
+    const users = await Rider.find({});
+    const totalUsers = await Rider.countDocuments();
+    return {
+        data: users,
+        meta: {
+            total: totalUsers
+        }
+    }
+};
+
 export const RiderService = {
     registetionRider,
-    myProfile
+    myProfile,
+    getAllUsers
 }
