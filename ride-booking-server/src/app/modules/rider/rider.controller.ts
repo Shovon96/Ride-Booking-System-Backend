@@ -61,7 +61,7 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
     const userId = req.params.id;
     const payload = req.body;
 
-     const decodedToken = req.user
+    const decodedToken = req.user
     const user = await RiderService.updateUser(userId, payload, decodedToken as JwtPayload)
 
     sendResponse(res, {
@@ -72,11 +72,25 @@ const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunc
     })
 })
 
+const deleteUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const decodedToken = req.user
+    const user = await RiderService.deleteUser(userId, decodedToken as JwtPayload)
+
+    sendResponse(res, {
+        statusCode: statusCode.CREATED,
+        success: true,
+        message: "User deleted Successfully!!",
+        data: null
+    })
+})
+
 
 export const RiderController = {
     registetionRider,
     myProfile,
     getAllUsers,
     getSingleUser,
-    updateUser
+    updateUser,
+    deleteUser
 }

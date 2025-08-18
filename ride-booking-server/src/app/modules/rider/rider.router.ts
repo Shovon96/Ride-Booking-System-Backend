@@ -17,4 +17,6 @@ router.get('/:id', checkAuth(RiderRole.ADMIN), RiderController.getSingleUser)
 
 router.patch('/:id', validateRequest(updateRiderZodSchema), checkAuth(...Object.values(RiderRole)), RiderController.updateUser)
 
+router.delete('/:id', checkAuth(...Object.values(RiderRole)), RiderController.deleteUser)
+
 export const UserRoutes = router;

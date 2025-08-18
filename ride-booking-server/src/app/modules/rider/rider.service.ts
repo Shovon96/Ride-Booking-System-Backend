@@ -49,10 +49,13 @@ const getAllUsers = async () => {
 
 const getSingleUser = async (id: string) => {
     const user = await Rider.findById(id).select("-password")
+    if(!user) {
+        throw new AppError(statusCode.NOT_FOUND, "User does not exist!")
+    }
     return { data: user }
 }
 
-const updateUser = async (userId: string, payload: Partial<IRider>, decodedToken: JwtPayload) => {
+const updateUser = async (userId: string, payload: Partial<IRider>, decodedToken: JwtPayload) =>{
 
     if (decodedToken.role === RiderRole.RIDER || decodedToken.role === RiderRole.DRIVER) {
         if (userId !== decodedToken.riderId) {
@@ -83,11 +86,25 @@ const updateUser = async (userId: string, payload: Partial<IRider>, decodedToken
     return newUpdatedUser;
 }
 
+const deleteUser = async (userId: string, decodedToken: JwtPayload) => {
+
+    if (decodedToken.role === RiderRole.RIDER || decodedToken.role === RiderRole.DRIVER) {
+        if (userId !== decodedToken.riderId) {
+            throw new AppError(statusCode.UNAUTHORIZED, "You are not valid user")
+        }
+    }
+
+    const deleteUser = await Rider.findByIdAndDelete(userId)
+
+    return deleteUser;
+}
+
 
 export const RiderService = {
     registetionRider,
     myProfile,
     getAllUsers,
     getSingleUser,
-    updateUser
+    updateUser,
+    deleteUser
 }
