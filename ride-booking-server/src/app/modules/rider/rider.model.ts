@@ -30,6 +30,9 @@ const riderSchema = new Schema<IRider>({
         enum: Object.values(RiderRole),
         default: RiderRole.RIDER
     },
+    phone: {
+        type: String
+    },
     isBlocked: {
         type: Boolean
     },

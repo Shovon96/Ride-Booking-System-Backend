@@ -30,6 +30,7 @@ export interface IRider {
     email: string;
     password?: string;
     role: RiderRole;
+    phone?: string;
     isBlocked?: boolean;
     isVerified?: boolean;
     createdAt?: Date;

@@ -45,9 +45,38 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await RiderService.getSingleUser(id)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.CREATED,
+        message: "User Retrieved Successfully",
+        data: result.data
+    })
+})
+
+const updateUser = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.params.id;
+    const payload = req.body;
+
+     const decodedToken = req.user
+    const user = await RiderService.updateUser(userId, payload, decodedToken as JwtPayload)
+
+    sendResponse(res, {
+        statusCode: statusCode.CREATED,
+        success: true,
+        message: "User Updated Successfully!!",
+        data: user,
+    })
+})
+
 
 export const RiderController = {
     registetionRider,
     myProfile,
-    getAllUsers
+    getAllUsers,
+    getSingleUser,
+    updateUser
 }

@@ -29,6 +29,36 @@ export const createRiderZodSchema = z.object({
     role: z.enum(Object.values(RiderRole) as [string])
         .transform((val) => val.toUpperCase())
         .optional(),
+    phone: z.string()
+        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        })
+        .optional(),
+
+    // Driver-specific fields
+    vehicleInfo: vehicleInfoSchema.optional(),
+    isAvailable: z.enum(Object.values(ActiveStatus) as [string])
+        .transform((val) => val.toUpperCase())
+        .optional(),
+    approvalStatus: z.enum(Object.values(ApprovalStatus) as [string])
+        .transform((val) => val.toUpperCase())
+        .optional(),
+});
+
+
+export const updateRiderZodSchema = z.object({
+    name: z.string()
+        .min(2, { message: "Name is required must at least 2 character" })
+        .max(40, { message: "Name is maximum 40 character" })
+        .optional(),
+    role: z.enum(Object.values(RiderRole) as [string])
+        .transform((val) => val.toUpperCase())
+        .optional(),
+    phone: z.string()
+        .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+            message: "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
+        })
+        .optional(),
 
     // Driver-specific fields
     vehicleInfo: vehicleInfoSchema.optional(),

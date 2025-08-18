@@ -1,9 +1,10 @@
-import { IRider, RiderRole } from "./rider.interface";
+import { ActiveStatus, IRider, RiderRole } from "./rider.interface";
 import { Rider } from "./rider.model";
 import { envVars } from "../../config/env";
 import bcrypt from 'bcryptjs'
 import statusCode from "http-status-codes";
 import AppError from "../../errorHandle/appError";
+import { JwtPayload } from "jsonwebtoken";
 
 const registetionRider = async (payload: Partial<IRider>) => {
     const { email, password, role, ...rest } = payload;
@@ -46,8 +47,47 @@ const getAllUsers = async () => {
     }
 };
 
+const getSingleUser = async (id: string) => {
+    const user = await Rider.findById(id).select("-password")
+    return { data: user }
+}
+
+const updateUser = async (userId: string, payload: Partial<IRider>, decodedToken: JwtPayload) => {
+
+    if (decodedToken.role === RiderRole.RIDER || decodedToken.role === RiderRole.DRIVER) {
+        if (userId !== decodedToken.riderId) {
+            throw new AppError(statusCode.UNAUTHORIZED, "You are not authorized")
+        }
+    }
+
+    const isUserExist = await Rider.findById(userId);
+
+    if (!isUserExist) {
+        throw new AppError(statusCode.NOT_FOUND, "This user not found")
+    }
+
+    if (payload.role) {
+        if (decodedToken.role === RiderRole.RIDER || decodedToken.role === RiderRole.DRIVER) {
+            throw new AppError(statusCode.FORBIDDEN, "You are not authorized for update")
+        }
+    }
+
+    if (payload.isBlocked || payload.isVerified || payload.isAvailable === ActiveStatus.SUSPENDED) {
+        if (decodedToken.role === RiderRole.RIDER || decodedToken.role === RiderRole.DRIVER) {
+            throw new AppError(statusCode.FORBIDDEN, "You are not authorized for update")
+        }
+    }
+
+    const newUpdatedUser = await Rider.findByIdAndUpdate(userId, payload, { new: true, runValidators: true }).select("-password")
+
+    return newUpdatedUser;
+}
+
+
 export const RiderService = {
     registetionRider,
     myProfile,
-    getAllUsers
+    getAllUsers,
+    getSingleUser,
+    updateUser
 }
