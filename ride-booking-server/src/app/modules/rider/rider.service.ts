@@ -28,6 +28,15 @@ const registetionRider = async (payload: Partial<IRider>) => {
 }
 
 
+const myProfile = async (userId: string) => {
+    const user = await Rider.findById(userId).select("-password")
+    if (!user) {
+        throw new AppError(401, "This user does not exist!")
+    }
+    return { data: user }
+}
+
 export const RiderService = {
-    registetionRider
+    registetionRider,
+    myProfile
 }

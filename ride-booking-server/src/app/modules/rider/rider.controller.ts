@@ -5,6 +5,7 @@ import statusCode from "http-status-codes"
 import { RiderService } from "./rider.service";
 import { createRiderTokens } from "../../utils/userToken";
 import { setAuthCookie } from "../../utils/setCookie";
+import { JwtPayload } from "jsonwebtoken";
 
 const registetionRider = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const rider = await RiderService.registetionRider(req.body);
@@ -20,7 +21,20 @@ const registetionRider = catchAsync(async (req: Request, res: Response, next: Ne
     })
 })
 
+const myProfile = catchAsync(async (req: Request, res: Response) => {
+    const decodedToken = req.user as JwtPayload
+    const result = await RiderService.myProfile(decodedToken.riderId)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: statusCode.CREATED,
+        message: "My Profile Retrieved Successfully",
+        data: result.data
+    })
+})
+
 
 export const RiderController = {
-    registetionRider
+    registetionRider,
+    myProfile
 }
