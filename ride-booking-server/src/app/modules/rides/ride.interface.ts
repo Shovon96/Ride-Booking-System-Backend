@@ -16,8 +16,6 @@ export enum RideStatus {
     CancelledByDriver = 'cancelled_by_driver',
 }
 
-
-
 export interface IRideTimeline {
     requestedAt?: Date;
     acceptedAt?: Date;
@@ -28,26 +26,14 @@ export interface IRideTimeline {
 
 export interface IRide {
     _id?: string;
-
     rider: Types.ObjectId;
     driver?: Types.ObjectId | null;
-
-    status:
-    | 'requested'
-    | 'accepted'
-    | 'picked_up'
-    | 'in_transit'
-    | 'completed'
-    | 'cancelled_by_rider'
-    | 'cancelled_by_driver';
-
+    rideStatus: RideStatus;
     pickupLocation: ILocation;
     destinationLocation: ILocation;
-
+    distance?: string;
     fare?: number;
-
     cancelledBy?: 'rider' | 'driver' | 'admin';
-
     rideTimeline?: IRideTimeline;
 
     createdAt?: Date;

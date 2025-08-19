@@ -1,35 +1,7 @@
-
-
 import { Schema, model } from 'mongoose';
-import { IRide } from './ride.interface';
+import { IRide, RideStatus } from './ride.interface';
+import { calculateFare } from '../../utils/calculateFare';
 
-
-
-export const calculateFare = (
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-): number => {
-    const toRadians = (degree: number) => (degree * Math.PI) / 180;
-
-    const R = 6371;
-    const dLat = toRadians(lat2 - lat1);
-    const dLon = toRadians(lon2 - lon1);
-
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRadians(lat1)) *
-        Math.cos(toRadians(lat2)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = R * c;
-
-    return distance;
-};
 
 const rideSchema = new Schema<IRide>(
     {
@@ -44,18 +16,10 @@ const rideSchema = new Schema<IRide>(
             default: null,
         },
 
-        status: {
+        rideStatus: {
             type: String,
-            enum: [
-                'requested',
-                'accepted',
-                'picked_up',
-                'in_transit',
-                'completed',
-                'cancelled_by_rider',
-                'cancelled_by_driver',
-            ],
-            default: 'requested',
+            enum: Object.values(RideStatus),
+            default: RideStatus.Requested,
         },
 
         pickupLocation: {
@@ -69,7 +33,9 @@ const rideSchema = new Schema<IRide>(
             lng: { type: Number, required: true },
             address: { type: String },
         },
-
+        distance: {
+            type: String
+        },
         fare: {
             type: Number,
             default: 0,
@@ -90,6 +56,7 @@ const rideSchema = new Schema<IRide>(
     },
     {
         timestamps: true,
+        versionKey: false,
     }
 );
 

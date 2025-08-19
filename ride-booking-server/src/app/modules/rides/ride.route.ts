@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { createRideSchema } from './ride.validation';
-import { RideController } from './ride.controller';
 import { checkAuth } from '../../middleware/checkAuth';
 import { validateRequest } from '../../middleware/validate.request';
 import { RiderRole } from '../rider/rider.interface';
+import { RideController } from './ride.controller';
 
 const router = Router();
 
