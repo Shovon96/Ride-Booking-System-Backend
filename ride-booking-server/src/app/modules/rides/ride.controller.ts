@@ -24,11 +24,25 @@ const getAllRides = catchAsync(async (req: Request, res: Response) => {
         statusCode: httpStatus.OK,
         success: true,
         message: 'All rides fetched successfully!',
-        data: result,
+        data: result.data,
+        meta: result.meta,
     });
 });
 
+const getSingleRide = catchAsync(async (req: Request, res: Response) => {
+    const { rideId } = req.params;
+    const user = req.user as JwtPayload;
+    const result = await RideService.getSingleRide(rideId, user);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Ride details retrieved successfully!',
+        data: result,
+    });
+})
+
 export const RideController = {
     createRide,
-    getAllRides
+    getAllRides,
+    getSingleRide
 };

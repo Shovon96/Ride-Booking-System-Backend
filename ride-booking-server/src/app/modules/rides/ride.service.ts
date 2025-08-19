@@ -69,18 +69,37 @@ const getAllRides = async (user: JwtPayload) => {
     const [totalRides, rides] = await Promise.all([
         Ride.countDocuments(filter),
         Ride.find(filter)
-            // .populate('driver', 'name email')
-            // .sort({ createdAt: -1 })
+        // .populate('driver', 'name email')
+        // .sort({ createdAt: -1 })
     ]);
 
     return {
-        totalRides,
-        rides
+        data: rides,
+        meta: {
+            total: totalRides
+        }
     };
 };
+
+const getSingleRide = async (rideId: string, user: JwtPayload) => {
+    const ride = await Ride.findById(rideId)
+    // .populate('driver', 'name email');
+
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Ride not found');
+    }
+
+    if (user.role === RiderRole.RIDER && ride.rider.toString() !== user.riderId) {
+        throw new AppError(httpStatus.FORBIDDEN, 'You are not allowed to access this ride');
+    }
+
+    return ride;
+};
+
 
 
 export const RideService = {
     createRide,
-    getAllRides
+    getAllRides,
+    getSingleRide
 }
