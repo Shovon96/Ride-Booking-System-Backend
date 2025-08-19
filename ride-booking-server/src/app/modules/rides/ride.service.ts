@@ -6,7 +6,7 @@ import httpStatus from 'http-status-codes';
 import { RiderRole } from '../rider/rider.interface';
 import { calculateFare } from '../../utils/calculateFare';
 
-export const createRide = async (payload: Partial<IRide>, decodedUser: JwtPayload) => {
+const createRide = async (payload: Partial<IRide>, decodedUser: JwtPayload) => {
 
     if (!decodedUser) {
         throw new AppError(httpStatus.UNAUTHORIZED, 'Your are unauthorized');
@@ -60,6 +60,27 @@ export const createRide = async (payload: Partial<IRide>, decodedUser: JwtPayloa
     return newRide;
 }
 
+const getAllRides = async (user: JwtPayload) => {
+    const userId = user.riderId;
+    const isRider = user.role === RiderRole.RIDER;
+
+    const filter = isRider ? { rider: userId } : {};
+
+    const [totalRides, rides] = await Promise.all([
+        Ride.countDocuments(filter),
+        Ride.find(filter)
+            // .populate('driver', 'name email')
+            // .sort({ createdAt: -1 })
+    ]);
+
+    return {
+        totalRides,
+        rides
+    };
+};
+
+
 export const RideService = {
-    createRide
+    createRide,
+    getAllRides
 }

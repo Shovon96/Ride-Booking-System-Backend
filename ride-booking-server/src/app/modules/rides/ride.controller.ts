@@ -17,7 +17,18 @@ const createRide = catchAsync(async (req: Request, res: Response, next: NextFunc
     });
 });
 
+const getAllRides = catchAsync(async (req: Request, res: Response) => {
+    const decodedUser = req.user;
+    const result = await RideService.getAllRides(decodedUser as JwtPayload);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'All rides fetched successfully!',
+        data: result,
+    });
+});
 
 export const RideController = {
-    createRide
+    createRide,
+    getAllRides
 };

@@ -14,4 +14,7 @@ router.post(
     RideController.createRide
 );
 
+router.get('/', checkAuth(RiderRole.RIDER, RiderRole.ADMIN), RideController.getAllRides);
+
+
 export const RideRouter = router
