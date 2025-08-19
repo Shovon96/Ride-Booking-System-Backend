@@ -5,6 +5,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import httpStatus from 'http-status-codes';
 import { RiderRole } from '../rider/rider.interface';
 import { calculateFare } from '../../utils/calculateFare';
+import { get } from 'http';
 
 const createRide = async (payload: Partial<IRide>, decodedUser: JwtPayload) => {
 
@@ -96,10 +97,23 @@ const getSingleRide = async (rideId: string, user: JwtPayload) => {
     return ride;
 };
 
+const getAvailableRides = async () => {
+    const availableRides = await Ride.find({ rideStatus: RideStatus.Requested })
+    // .populate('rider', 'name email')
+    // .sort({ createdAt: -1 });
+
+    if (!availableRides) {
+        throw new AppError(httpStatus.NOT_FOUND, 'There is no ride are available.');
+    }
+
+    return availableRides;
+}
+
 
 
 export const RideService = {
     createRide,
     getAllRides,
-    getSingleRide
+    getSingleRide,
+    getAvailableRides
 }

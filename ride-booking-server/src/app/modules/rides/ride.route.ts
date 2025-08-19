@@ -16,11 +16,11 @@ router.post(
 
 router.get('/', checkAuth(RiderRole.RIDER, RiderRole.ADMIN), RideController.getAllRides);
 
-// router.get(
-//     '/available',
-//     checkAuth(RiderRole.DRIVER, RiderRole.ADMIN),
-//     RideController.getAvailableRides
-// );
+router.get(
+    '/available',
+    checkAuth(RiderRole.DRIVER, RiderRole.ADMIN),
+    RideController.getAvailableRides
+);
 
 router.get(
     '/:rideId',
