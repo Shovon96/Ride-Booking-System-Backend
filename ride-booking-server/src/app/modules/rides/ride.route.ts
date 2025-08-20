@@ -29,16 +29,17 @@ router.get(
 );
 
 router.patch(
-  '/:rideId',
-checkAuth(RiderRole.RIDER, RiderRole.ADMIN),
-  validateRequest(updateRideSchema),
-  RideController.updateRideStatus
+    '/:rideId',
+    checkAuth(RiderRole.RIDER, RiderRole.ADMIN),
+    validateRequest(updateRideSchema),
+    RideController.updateRideStatus
 );
 
 router.post(
-  '/:rideId/cancel',
-  checkAuth(...Object.values(RiderRole)),
-  RideController.cancelRequestedRide
+    '/:rideId/cancel',
+    checkAuth(...Object.values(RiderRole)),
+    RideController.cancelRequestedRide
 );
+
 
 export const RideRouter = router

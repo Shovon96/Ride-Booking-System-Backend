@@ -5,7 +5,6 @@ import { JwtPayload } from 'jsonwebtoken';
 import httpStatus from 'http-status-codes';
 import { RiderRole } from '../rider/rider.interface';
 import { calculateFare } from '../../utils/calculateFare';
-import { get } from 'http';
 
 const createRide = async (payload: Partial<IRide>, decodedUser: JwtPayload) => {
 

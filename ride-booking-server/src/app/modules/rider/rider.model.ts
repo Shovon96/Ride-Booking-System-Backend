@@ -34,9 +34,10 @@ const riderSchema = new Schema<IRider>({
         type: String
     },
     isBlocked: {
-        type: Boolean
+        type: Boolean,
+        default: true
     },
-    isVerified: { type: Boolean },
+    isVerified: { type: Boolean, default: true },
     createdAt: {
         type: Date
     },
@@ -49,7 +50,8 @@ const riderSchema = new Schema<IRider>({
     },
     approvalStatus: {
         type: String,
-        enum: Object.values(ApprovalStatus)
+        enum: Object.values(ApprovalStatus),
+        default: ApprovalStatus.APPROVED
     },
     vehicleInfo: {
         type: vehicleInfoSchema,
