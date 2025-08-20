@@ -33,7 +33,7 @@ export interface IRide {
     destinationLocation: ILocation;
     distance?: string;
     fare?: number;
-    cancelledBy?: 'rider' | 'driver' | 'admin';
+    cancelledBy?: 'RIDER' | 'DRIVER' | 'ADMIN';
     rideTimeline?: IRideTimeline;
 
     createdAt?: Date;

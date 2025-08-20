@@ -63,10 +63,24 @@ const updateRideStatus = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+
+const cancelRequestedRide = catchAsync(async (req: Request, res: Response) => {
+    const { rideId } = req.params;
+    const { riderId, role } = req.user as JwtPayload;
+    const result = await RideService.cancelRequestedRide(rideId, role, riderId);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Ride cancelled successfully!',
+        data: result,
+    })
+})
+
 export const RideController = {
     createRide,
     getAllRides,
     getSingleRide,
     getAvailableRides,
-    updateRideStatus
+    updateRideStatus,
+    cancelRequestedRide
 };

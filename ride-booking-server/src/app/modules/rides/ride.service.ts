@@ -166,11 +166,47 @@ const updateRideStatus = async (
 }
 
 
+const cancelRequestedRide = async (rideId: string, cancelledBy: 'RIDER' | 'DRIVER' | 'ADMIN', userId: string) => {
+    const ride = await Ride.findById(rideId);
+
+    if (!ride) throw new Error('Ride not found');
+
+    if (ride.rideStatus === RideStatus.Completed ||
+        ride.rideStatus === RideStatus.CancelledByRider ||
+        ride.rideStatus === RideStatus.CancelledByDriver ||
+        ride.rideStatus === RideStatus.PickedUp ||
+        ride.rideStatus === RideStatus.InTransit) {
+        throw new AppError(401, `This ride already ${ride.rideStatus}. You can't cancel it.`);
+    }
+
+    if (
+        (cancelledBy === 'RIDER' && ride.rider.toString() !== userId) ||
+        (cancelledBy === 'DRIVER' && ride.driver?.toString() !== userId)
+    ) {
+        throw new Error('Unauthorized cancellation');
+    }
+
+    const status = cancelledBy === 'RIDER' ? RideStatus.CancelledByRider : RideStatus.CancelledByDriver;
+    console.log('cancelled status', cancelledBy)
+
+    ride.rideStatus = status;
+    ride.cancelledBy = cancelledBy;
+    if (!ride.rideTimeline) {
+        ride.rideTimeline = {};
+    }
+    ride.rideTimeline.cancelledAt = new Date();
+
+    await ride.save();
+
+    return ride;
+}
+
 
 export const RideService = {
     createRide,
     getAllRides,
     getSingleRide,
     getAvailableRides,
-    updateRideStatus
+    updateRideStatus,
+    cancelRequestedRide
 }

@@ -35,4 +35,10 @@ checkAuth(RiderRole.RIDER, RiderRole.ADMIN),
   RideController.updateRideStatus
 );
 
+router.post(
+  '/:rideId/cancel',
+  checkAuth(...Object.values(RiderRole)),
+  RideController.cancelRequestedRide
+);
+
 export const RideRouter = router

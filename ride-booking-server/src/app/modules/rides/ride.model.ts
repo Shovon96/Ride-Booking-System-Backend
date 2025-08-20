@@ -7,12 +7,12 @@ const rideSchema = new Schema<IRide>(
     {
         rider: {
             type: Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Rider',
             required: true,
         },
         driver: {
             type: Schema.Types.ObjectId,
-            ref: 'User',
+            ref: 'Driver',
             default: null,
         },
 
@@ -43,7 +43,7 @@ const rideSchema = new Schema<IRide>(
 
         cancelledBy: {
             type: String,
-            enum: ['rider', 'driver', 'admin'],
+            enum: ['RIDER', 'DRIVER', 'ADMIN'],
         },
 
         rideTimeline: {
