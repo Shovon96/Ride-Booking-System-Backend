@@ -4,6 +4,8 @@ import { ApprovalStatus, RiderRole } from "../rider/rider.interface";
 import { Rider } from "../rider/rider.model";
 import { Ride } from "../rides/ride.model";
 import { RideStatus } from "../rides/ride.interface";
+import { JwtPayload } from "jsonwebtoken";
+import httpStatus from 'http-status-codes';
 
 const acceptRideByDriver = async (rideId: string, driverId: string) => {
     const isDriverExist = await Rider.findById(driverId);
@@ -72,8 +74,35 @@ const updateRideStatus = async (rideId: string, status: RideStatus) => {
     return updatedRide;
 }
 
+const rejectRide = async (rideId: string, decodedToken: JwtPayload) => {
+    const ride = await Ride.findById(rideId)
+    const driverId = decodedToken.riderId
+
+    const isDriverExists = await Rider.findById(driverId)
+
+    if (!ride) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This ride is not exits")
+    }
+    if (!isDriverExists) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This driver is not exits")
+    }
+
+
+    ride.rideStatus = RideStatus.CancelledByDriver;
+    ride.driver = isDriverExists._id;
+
+    await ride.save();
+    await isDriverExists.save();
+
+
+    return {
+        ride,
+    }
+
+}
 
 export const DriverService = {
     acceptRideByDriver,
-    updateRideStatus
+    updateRideStatus,
+    rejectRide
 }

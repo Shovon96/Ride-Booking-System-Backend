@@ -29,8 +29,23 @@ const updateRideStatus = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
+const rejectRide = catchAsync(async (req: Request, res: Response) => {
+    const rideId = req.params.id
+    const decodedToken = req.user as JwtPayload;
+
+    const acceptRide = await DriverService.rejectRide(rideId, decodedToken)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.ACCEPTED,
+        message: "Driver rejected this Ride",
+        data: acceptRide
+    })
+})
+
 
 export const DriverController = {
     acceptRideByDriver,
-    updateRideStatus
+    updateRideStatus,
+    rejectRide
 }

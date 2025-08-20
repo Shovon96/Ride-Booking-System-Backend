@@ -8,16 +8,18 @@ import { updateRideStatusSchema } from "../rides/ride.validation";
 const router = Router();
 
 router.post(
-    '/:rideId/accept',
-    checkAuth(RiderRole.DRIVER),
-    DriverController.acceptRideByDriver
+  '/accept/:rideId',
+  checkAuth(RiderRole.DRIVER),
+  DriverController.acceptRideByDriver
 );
 
 router.patch(
-  '/:id/status',
+  '/status/:id',
   checkAuth(RiderRole.DRIVER),
   validateRequest(updateRideStatusSchema),
   DriverController.updateRideStatus
 );
+
+router.post('/reject/:id', checkAuth(RiderRole.DRIVER), DriverController.rejectRide);
 
 export const DriverRouter = router;
