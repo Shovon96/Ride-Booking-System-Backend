@@ -23,3 +23,15 @@ export const updateRideSchema = z.object({
     status: z.enum(Object.values(RideStatus) as [string]).optional(),
     driver: objectId.optional(),
 });
+
+
+export const updateRideStatusSchema = z.object({
+    status: z.enum([
+        'accepted',
+        'picked_up',
+        'in_transit',
+        'completed',
+        'cancelled_by_rider',
+        'cancelled_by_driver',
+    ]),
+})

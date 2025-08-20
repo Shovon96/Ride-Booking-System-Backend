@@ -39,7 +39,41 @@ const acceptRideByDriver = async (rideId: string, driverId: string) => {
     return updateRide;
 }
 
+const updateRideStatus = async (rideId: string, status: RideStatus) => {
+    const update: any = { status };
+
+    const statusTimeMap: Record<string, string> = {
+        [RideStatus.Accepted]: 'acceptedAt',
+        [RideStatus.PickedUp]: 'pickedUpAt',
+        [RideStatus.Completed]: 'completedAt',
+        [RideStatus.CancelledByDriver]: 'cancelledAt',
+        [RideStatus.CancelledByRider]: 'cancelledAt',
+    };
+
+    const timelineKey = statusTimeMap[status];
+    if (timelineKey) {
+        update[`rideTimeline.${timelineKey}`] = new Date();
+    }
+
+    const updatedRide = await Ride.findByIdAndUpdate(rideId, { rideStatus: status, ...update }, {
+        new: true,
+    });
+
+    // if (status === RideStatus.Completed && updatedRide) {
+    //     await HistoryService.createHistory({
+    //         rideId: new Types.ObjectId(updatedRide._id),
+    //         riderId: updatedRide.rider as any,
+    //         driverId: updatedRide.driver as any,
+    //         status: 'COMPLETED',
+    //         completedAt: new Date(),
+    //     });
+    // }
+
+    return updatedRide;
+}
+
 
 export const DriverService = {
-    acceptRideByDriver
+    acceptRideByDriver,
+    updateRideStatus
 }

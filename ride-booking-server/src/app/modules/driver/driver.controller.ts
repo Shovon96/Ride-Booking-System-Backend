@@ -17,7 +17,20 @@ const acceptRideByDriver = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const updateRideStatus = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const status = req.body.status;
+    const result = await DriverService.updateRideStatus(id, status);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: `Ride status updated to ${status}`,
+        data: result,
+    });
+})
+
 
 export const DriverController = {
-    acceptRideByDriver
+    acceptRideByDriver,
+    updateRideStatus
 }
