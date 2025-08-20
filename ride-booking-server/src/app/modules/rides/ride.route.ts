@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createRideSchema } from './ride.validation';
+import { createRideSchema, updateRideSchema } from './ride.validation';
 import { checkAuth } from '../../middleware/checkAuth';
 import { validateRequest } from '../../middleware/validate.request';
 import { RiderRole } from '../rider/rider.interface';
@@ -26,6 +26,13 @@ router.get(
     '/:rideId',
     checkAuth(RiderRole.RIDER, RiderRole.ADMIN),
     RideController.getSingleRide
+);
+
+router.patch(
+  '/:rideId',
+checkAuth(RiderRole.RIDER, RiderRole.ADMIN),
+  validateRequest(updateRideSchema),
+  RideController.updateRideStatus
 );
 
 export const RideRouter = router

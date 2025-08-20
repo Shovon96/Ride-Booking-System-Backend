@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { RideStatus } from './ride.interface';
 
 export const createRideSchema = z.object({
     rider: z.string(),
@@ -12,4 +13,13 @@ export const createRideSchema = z.object({
         lng: z.number().min(-180).max(180),
         address: z.string().optional(),
     })
+});
+
+
+const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+const objectId = z.string().regex(objectIdRegex, 'Invalid ObjectId format');
+
+export const updateRideSchema = z.object({
+    status: z.enum(Object.values(RideStatus) as [string]).optional(),
+    driver: objectId.optional(),
 });

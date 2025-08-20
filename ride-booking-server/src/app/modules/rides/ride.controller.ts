@@ -51,9 +51,22 @@ const getAvailableRides = catchAsync(async (_req: Request, res: Response) => {
     });
 })
 
+const updateRideStatus = catchAsync(async (req: Request, res: Response) => {
+    const { rideId } = req.params;
+    const user = req.user as JwtPayload;
+    const result = await RideService.updateRideStatus(user, rideId, req.body);
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Ride updated successfully!',
+        data: result,
+    })
+})
+
 export const RideController = {
     createRide,
     getAllRides,
     getSingleRide,
-    getAvailableRides
+    getAvailableRides,
+    updateRideStatus
 };

@@ -109,11 +109,68 @@ const getAvailableRides = async () => {
     return availableRides;
 }
 
+const updateRideStatus = async (
+    user: JwtPayload,
+    rideId: string,
+    data: { status?: RideStatus; driver?: string }
+) => {
+    const { status, driver } = data;
+
+    const update: any = {};
+    const ride = await Ride.findById(rideId);
+
+    if (!ride) {
+        throw new AppError(httpStatus.NOT_FOUND, 'Ride not found');
+    }
+
+    if (user.role === RiderRole.RIDER && ride.rider.toString() !== user.riderId) {
+        throw new AppError(httpStatus.FORBIDDEN, 'You are not allowed to update this ride');
+    }
+
+    if (status) {
+        update.rideStatus = status;
+
+        const statusTimeMap: Record<string, string> = {
+            [RideStatus.Accepted]: 'acceptedAt',
+            [RideStatus.PickedUp]: 'pickedUpAt',
+            [RideStatus.Completed]: 'completedAt',
+            [RideStatus.CancelledByDriver]: 'cancelledAt',
+            [RideStatus.CancelledByRider]: 'cancelledAt',
+        };
+
+        const timelineKey = statusTimeMap[status];
+        if (timelineKey) {
+            update[`rideTimeline.${timelineKey}`] = new Date();
+        }
+    }
+
+    if (driver) {
+        update.driver = driver;
+    }
+
+    const updatedRide = await Ride.findByIdAndUpdate(rideId, update, {
+        new: true,
+    });
+
+    // if (status === RideStatus.Completed && updatedRide) {
+    //     await HistoryService.createHistory({
+    //         rideId: new Types.ObjectId(updatedRide._id),
+    //         riderId: updatedRide.rider as any,
+    //         driverId: updatedRide.driver as any,
+    //         status: 'COMPLETED',
+    //         completedAt: new Date(),
+    //     });
+    // }
+
+    return updatedRide;
+}
+
 
 
 export const RideService = {
     createRide,
     getAllRides,
     getSingleRide,
-    getAvailableRides
+    getAvailableRides,
+    updateRideStatus
 }
