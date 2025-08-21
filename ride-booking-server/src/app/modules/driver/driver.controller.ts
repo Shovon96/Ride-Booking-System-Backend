@@ -5,6 +5,30 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from 'http-status-codes';
 import { DriverService } from "./driver.service";
 
+const getAllDrivers = catchAsync(async (req: Request, res: Response) => {
+    const result = await DriverService.getAllDrivers()
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "All Drivers Retrieved Successfully",
+        data: result.data,
+        meta: result.meta
+    })
+})
+
+const getSingleDriver = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const result = await DriverService.getSingleDriver(id)
+
+    sendResponse(res, {
+        success: true,
+        statusCode: httpStatus.OK,
+        message: "Driver Retrieved Successfully",
+        data: result.data
+    })
+})
+
 const acceptRideByDriver = catchAsync(async (req: Request, res: Response) => {
     const { rideId } = req.params;
     const { riderId } = req.user as JwtPayload;
@@ -47,5 +71,7 @@ const rejectRide = catchAsync(async (req: Request, res: Response) => {
 export const DriverController = {
     acceptRideByDriver,
     updateRideStatus,
-    rejectRide
+    rejectRide,
+    getAllDrivers,
+    getSingleDriver
 }

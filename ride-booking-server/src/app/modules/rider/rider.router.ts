@@ -11,9 +11,9 @@ router.post('/register', validateRequest(createRiderZodSchema), RiderController.
 
 router.get('/my-profile', checkAuth(...Object.values(RiderRole)), RiderController.myProfile)
 
-router.get('/all-users', checkAuth(RiderRole.ADMIN), RiderController.getAllUsers)
+router.get('/all-riders', checkAuth(RiderRole.ADMIN), RiderController.getAllRiders)
 
-router.get('/:id', checkAuth(RiderRole.ADMIN), RiderController.getSingleUser)
+router.get('/:id', checkAuth(RiderRole.ADMIN), RiderController.getSingleRider)
 
 router.patch('/:id', validateRequest(updateRiderZodSchema), checkAuth(...Object.values(RiderRole)), RiderController.updateUser)
 

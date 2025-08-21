@@ -15,6 +15,18 @@ const registetionRider = async (payload: Partial<IRider>) => {
         throw new AppError(statusCode.BAD_REQUEST, "This Rider Already Exist")
     }
 
+    if (payload.role === RiderRole.DRIVER) {
+        if (!payload?.vehicleInfo) {
+            throw new AppError(statusCode.BAD_REQUEST, "Vehicle details are required for drivers")
+        }
+    }
+
+    if (payload.role === RiderRole.RIDER) {
+        if (payload?.vehicleInfo) {
+            throw new AppError(statusCode.BAD_REQUEST, "Vehicle details do not need for riders")
+        }
+    }
+
     const hashedPassword = await bcrypt.hash(password as string, Number(envVars.BCRYPT_SALT_ROUND))
 
     const rider = await Rider.create({
@@ -36,26 +48,30 @@ const myProfile = async (userId: string) => {
     return { data: user }
 }
 
-const getAllUsers = async () => {
+const getAllRiders = async () => {
     const users = await Rider.find({});
-    const totalUsers = await Rider.countDocuments();
+    const filteredRiders = users.filter(user => user.role === RiderRole.RIDER);
+    const totalRiders = await Rider.countDocuments({ role: RiderRole.RIDER });
     return {
-        data: users,
+        data: filteredRiders,
         meta: {
-            total: totalUsers
+            total: totalRiders
         }
     }
 };
 
-const getSingleUser = async (id: string) => {
+const getSingleRider = async (id: string) => {
     const user = await Rider.findById(id).select("-password")
-    if(!user) {
-        throw new AppError(statusCode.NOT_FOUND, "User does not exist!")
+    if (!user) {
+        throw new AppError(statusCode.NOT_FOUND, "This rider does not exist!")
+    }
+    if (user.role !== RiderRole.RIDER) {
+        throw new AppError(statusCode.BAD_REQUEST, "This is not a valid rider")
     }
     return { data: user }
 }
 
-const updateUser = async (userId: string, payload: Partial<IRider>, decodedToken: JwtPayload) =>{
+const updateUser = async (userId: string, payload: Partial<IRider>, decodedToken: JwtPayload) => {
 
     if (decodedToken.role === RiderRole.RIDER || decodedToken.role === RiderRole.DRIVER) {
         if (userId !== decodedToken.riderId) {
@@ -103,8 +119,8 @@ const deleteUser = async (userId: string, decodedToken: JwtPayload) => {
 export const RiderService = {
     registetionRider,
     myProfile,
-    getAllUsers,
-    getSingleUser,
+    getAllRiders,
+    getSingleRider,
     updateUser,
     deleteUser
 }

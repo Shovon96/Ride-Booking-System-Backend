@@ -6,7 +6,7 @@ const vehicleInfoSchema = new Schema<VehicleInfo>({
     license: { type: String, required: true },
     model: { type: String, required: true },
     plateNumber: { type: String, required: true },
-});
+}, { versionKey: false, _id: false });
 
 
 const riderSchema = new Schema<IRider>({

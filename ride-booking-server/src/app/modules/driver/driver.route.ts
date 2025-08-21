@@ -7,6 +7,10 @@ import { updateRideStatusSchema } from "../rides/ride.validation";
 
 const router = Router();
 
+router.get('/all-drivers', checkAuth(RiderRole.ADMIN), DriverController.getAllDrivers)
+
+router.get('/:id', checkAuth(RiderRole.ADMIN), DriverController.getSingleDriver)
+
 router.post(
   '/accept/:rideId',
   checkAuth(RiderRole.DRIVER),
@@ -21,5 +25,7 @@ router.patch(
 );
 
 router.post('/reject/:id', checkAuth(RiderRole.DRIVER), DriverController.rejectRide);
+
+
 
 export const DriverRouter = router;

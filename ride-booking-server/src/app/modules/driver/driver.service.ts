@@ -8,6 +8,31 @@ import { JwtPayload } from "jsonwebtoken";
 import httpStatus from 'http-status-codes';
 import { HistoryService } from "../history/history.service";
 
+const getAllDrivers = async () => {
+    const users = await Rider.find({});
+    const filteredDrivers = users.filter(user => user.role === RiderRole.DRIVER);
+    const totalDrivers = await Rider.countDocuments({ role: RiderRole.DRIVER });
+    return {
+        data: filteredDrivers,
+        meta: {
+            total: totalDrivers
+        }
+    }
+};
+
+const getSingleDriver = async (id: string) => {
+    const user = await Rider.findById(id).select("-password")
+
+    if (!user) {
+        throw new AppError(httpStatus.NOT_FOUND, "Driver does not exist!")
+    }
+    if (user.role !== RiderRole.DRIVER) {
+        throw new AppError(httpStatus.BAD_REQUEST, "This is not a valid driver")
+    }
+    return { data: user }
+}
+
+
 const acceptRideByDriver = async (rideId: string, driverId: string) => {
     const isDriverExist = await Rider.findById(driverId);
     if (
@@ -105,5 +130,7 @@ const rejectRide = async (rideId: string, decodedToken: JwtPayload) => {
 export const DriverService = {
     acceptRideByDriver,
     updateRideStatus,
-    rejectRide
+    rejectRide,
+    getAllDrivers,
+    getSingleDriver
 }

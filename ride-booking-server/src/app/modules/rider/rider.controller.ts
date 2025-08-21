@@ -33,8 +33,8 @@ const myProfile = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-    const result = await RiderService.getAllUsers()
+const getAllRiders = catchAsync(async (req: Request, res: Response) => {
+    const result = await RiderService.getAllRiders()
 
     sendResponse(res, {
         success: true,
@@ -45,14 +45,14 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+const getSingleRider = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id;
-    const result = await RiderService.getSingleUser(id)
+    const result = await RiderService.getSingleRider(id)
 
     sendResponse(res, {
         success: true,
         statusCode: statusCode.CREATED,
-        message: "User Retrieved Successfully",
+        message: "Rider Retrieved Successfully",
         data: result.data
     })
 })
@@ -89,8 +89,8 @@ const deleteUser = catchAsync(async (req: Request, res: Response, next: NextFunc
 export const RiderController = {
     registetionRider,
     myProfile,
-    getAllUsers,
-    getSingleUser,
+    getAllRiders,
+    getSingleRider,
     updateUser,
     deleteUser
 }
