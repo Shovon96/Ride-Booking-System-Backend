@@ -6,6 +6,7 @@ import { Ride } from "../rides/ride.model";
 import { RideStatus } from "../rides/ride.interface";
 import { JwtPayload } from "jsonwebtoken";
 import httpStatus from 'http-status-codes';
+import { HistoryService } from "../history/history.service";
 
 const acceptRideByDriver = async (rideId: string, driverId: string) => {
     const isDriverExist = await Rider.findById(driverId);
@@ -61,15 +62,15 @@ const updateRideStatus = async (rideId: string, status: RideStatus) => {
         new: true,
     });
 
-    // if (status === RideStatus.Completed && updatedRide) {
-    //     await HistoryService.createHistory({
-    //         rideId: new Types.ObjectId(updatedRide._id),
-    //         riderId: updatedRide.rider as any,
-    //         driverId: updatedRide.driver as any,
-    //         status: 'COMPLETED',
-    //         completedAt: new Date(),
-    //     });
-    // }
+    if (status === RideStatus.Completed && updatedRide) {
+        await HistoryService.createHistory({
+            rideId: new Types.ObjectId(updatedRide._id),
+            riderId: updatedRide.rider as any,
+            driverId: updatedRide.driver as any,
+            status: 'COMPLETED',
+            completedAt: new Date(),
+        });
+    }
 
     return updatedRide;
 }

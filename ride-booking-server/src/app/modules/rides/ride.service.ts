@@ -5,6 +5,8 @@ import { JwtPayload } from 'jsonwebtoken';
 import httpStatus from 'http-status-codes';
 import { RiderRole } from '../rider/rider.interface';
 import { calculateFare } from '../../utils/calculateFare';
+import { HistoryService } from '../history/history.service';
+import { Types } from 'mongoose';
 
 const createRide = async (payload: Partial<IRide>, decodedUser: JwtPayload) => {
 
@@ -151,19 +153,18 @@ const updateRideStatus = async (
         new: true,
     });
 
-    // if (status === RideStatus.Completed && updatedRide) {
-    //     await HistoryService.createHistory({
-    //         rideId: new Types.ObjectId(updatedRide._id),
-    //         riderId: updatedRide.rider as any,
-    //         driverId: updatedRide.driver as any,
-    //         status: 'COMPLETED',
-    //         completedAt: new Date(),
-    //     });
-    // }
+    if (status === RideStatus.Completed && updatedRide) {
+        await HistoryService.createHistory({
+            rideId: new Types.ObjectId(updatedRide._id),
+            riderId: updatedRide.rider as any,
+            driverId: updatedRide.driver as any,
+            status: 'COMPLETED',
+            completedAt: new Date(),
+        });
+    }
 
     return updatedRide;
 }
-
 
 const cancelRequestedRide = async (rideId: string, cancelledBy: 'RIDER' | 'DRIVER' | 'ADMIN', userId: string) => {
     const ride = await Ride.findById(rideId);
