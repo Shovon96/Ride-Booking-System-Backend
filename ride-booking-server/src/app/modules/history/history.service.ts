@@ -30,7 +30,7 @@ const deleteHistory = async (id: string): Promise<IHistory | null> => {
     return History.findByIdAndDelete(id);
 }
 
-const updateRiderFeedback = async (
+const updateRiderFeedbackByDriver = async (
     historyId: string,
     data: { rating: number; feedback?: string },
     userId: string
@@ -40,8 +40,8 @@ const updateRiderFeedback = async (
         throw new AppError(404, 'History not found');
     }
 
-    if (history.riderId.toString() !== userId) {
-        throw new AppError(401, 'Unauthorized');
+    if (history.driverId.toString() !== userId) {
+        throw new AppError(401, 'Your are unauthorized!');
     }
 
     return History.findByIdAndUpdate(
@@ -54,7 +54,7 @@ const updateRiderFeedback = async (
     );
 }
 
-const updateDriverFeedback = async (
+const updateDriverFeedbackByRider = async (
     historyId: string,
     data: { rating: number; feedback?: string },
     userId: string
@@ -64,8 +64,8 @@ const updateDriverFeedback = async (
         throw new AppError(404, 'History not found');
     }
 
-    if (history.driverId?.toString() !== userId) {
-        throw new AppError(401, 'Unauthorized');
+    if (history.riderId?.toString() !== userId) {
+        throw new AppError(401, 'Your are unauthorized');
     }
 
     return History.findByIdAndUpdate(
@@ -84,6 +84,6 @@ export const HistoryService = {
     getSingleHistory,
     updateHistory,
     deleteHistory,
-    updateRiderFeedback,
-    updateDriverFeedback
+    updateRiderFeedbackByDriver,
+    updateDriverFeedbackByRider
 };

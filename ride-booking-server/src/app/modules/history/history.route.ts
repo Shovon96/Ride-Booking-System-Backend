@@ -11,17 +11,17 @@ const router = Router();
 router.get('/', HistoryController.getAllHistories);
 
 router.patch(
-    '/rider-feedback/:rideId',
-    checkAuth(RiderRole.RIDER),
+    '/rider-feedback/:historyId',
+    checkAuth(RiderRole.DRIVER),
     validateRequest(riderFeedbackSchema),
-    HistoryController.updateRiderFeedback
+    HistoryController.updateRiderFeedbackByDriver
 );
 
 router.patch(
-    '/driver-feedback/:driverId',
-    checkAuth(RiderRole.DRIVER),
+    '/driver-feedback/:historyId',
+    checkAuth(RiderRole.RIDER),
     validateRequest(driverFeedbackSchema),
-    HistoryController.updateDriverFeedback
+    HistoryController.updateDriverFeedbackByRider
 );
 
 

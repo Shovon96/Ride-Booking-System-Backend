@@ -53,10 +53,10 @@ const deleteHistory = catchAsync(async (req: Request, res: Response) => {
 })
 
 
-const updateRiderFeedback = catchAsync(async (req: Request, res: Response) => {
+const updateRiderFeedbackByDriver = catchAsync(async (req: Request, res: Response) => {
     const { rideId } = req.params;
     const { riderId } = req.user as JwtPayload;
-    const updated = await HistoryService.updateRiderFeedback(rideId, req.body, riderId);
+    const updated = await HistoryService.updateRiderFeedbackByDriver(rideId, req.body, riderId);
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
@@ -65,10 +65,10 @@ const updateRiderFeedback = catchAsync(async (req: Request, res: Response) => {
     });
 })
 
-const updateDriverFeedback = catchAsync(async (req: Request, res: Response) => {
-    const { driveId } = req.params;
-    const { driverId } = req.user as JwtPayload;
-    const updated = await HistoryService.updateDriverFeedback(driveId, req.body, driverId);
+const updateDriverFeedbackByRider = catchAsync(async (req: Request, res: Response) => {
+    const { historyId } = req.params;
+    const { riderId } = req.user as JwtPayload;
+    const updated = await HistoryService.updateDriverFeedbackByRider(historyId, req.body, riderId);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
@@ -83,6 +83,6 @@ export const HistoryController = {
     getSingleHistory,
     updateHistory,
     deleteHistory,
-    updateRiderFeedback,
-    updateDriverFeedback
+    updateRiderFeedbackByDriver,
+    updateDriverFeedbackByRider
 };
