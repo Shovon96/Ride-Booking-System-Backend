@@ -9,6 +9,11 @@ const router = Router();
 
 router.get('/all-drivers', checkAuth(RiderRole.ADMIN), DriverController.getAllDrivers)
 
+
+router.get("/total-earnings",
+  checkAuth(RiderRole.DRIVER),
+  DriverController.getDriverTotalEarnings
+);
 router.get('/:id', checkAuth(RiderRole.ADMIN), DriverController.getSingleDriver)
 
 router.post(
@@ -26,6 +31,10 @@ router.patch(
 
 router.post('/reject/:id', checkAuth(RiderRole.DRIVER), DriverController.rejectRide);
 
-
+// router.get("/total-earnings", (req, res, next) => {
+//   console.log('total earnings');
+//   checkAuth(RiderRole.DRIVER),
+//     DriverController.getDriverEarningsHistory(req, res, next);
+// });
 
 export const DriverRouter = router;

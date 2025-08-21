@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
-import { JwtPayload } from "jsonwebtoken";
+import { Jwt, JwtPayload } from "jsonwebtoken";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from 'http-status-codes';
 import { DriverService } from "./driver.service";
@@ -67,11 +67,24 @@ const rejectRide = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getDriverTotalEarnings = catchAsync(async (req: Request, res: Response) => {
+    const { riderId } = req.user as JwtPayload;
+    const result = await DriverService.getDriverTotalEarnings(riderId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: "Earnings history fetched successfully!",
+        data: result,
+    });
+});
+
 
 export const DriverController = {
     acceptRideByDriver,
     updateRideStatus,
     rejectRide,
     getAllDrivers,
-    getSingleDriver
+    getSingleDriver,
+    getDriverTotalEarnings
 }

@@ -11,6 +11,7 @@ export interface IHistory {
   driverRating?: number;
   driverFeedback?: string;
 
+  fare?: number;
   status?: 'COMPLETED' | 'CANCELLED' | 'REJECTED';
   completedAt?: Date | null;
 }

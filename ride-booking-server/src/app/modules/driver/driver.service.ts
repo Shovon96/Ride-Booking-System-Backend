@@ -7,6 +7,7 @@ import { RideStatus } from "../rides/ride.interface";
 import { JwtPayload } from "jsonwebtoken";
 import httpStatus from 'http-status-codes';
 import { HistoryService } from "../history/history.service";
+import { History } from "../history/history.model";
 
 const getAllDrivers = async () => {
     const users = await Rider.find({});
@@ -92,6 +93,7 @@ const updateRideStatus = async (rideId: string, status: RideStatus) => {
             rideId: new Types.ObjectId(updatedRide._id),
             riderId: updatedRide.rider as any,
             driverId: updatedRide.driver as any,
+            fare: updatedRide.fare,
             status: 'COMPLETED',
             completedAt: new Date(),
         });
@@ -127,10 +129,22 @@ const rejectRide = async (rideId: string, decodedToken: JwtPayload) => {
 
 }
 
+const getDriverTotalEarnings = async (driverId: string) => {
+    const histories = await History.find({ driverId, status: "COMPLETED" }).sort({ completedAt: -1 });
+    const totalEarnings = histories.reduce((acc, h) => acc + (h.fare || 0), 0);
+
+    return {
+        totalEarnings,
+        totalRides: histories.length,
+        histories,
+    };
+};
+
 export const DriverService = {
     acceptRideByDriver,
     updateRideStatus,
     rejectRide,
     getAllDrivers,
-    getSingleDriver
+    getSingleDriver,
+    getDriverTotalEarnings
 }

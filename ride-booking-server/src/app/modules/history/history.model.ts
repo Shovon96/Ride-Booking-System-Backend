@@ -11,6 +11,7 @@ const HistorySchema = new Schema(
     driverRating: { type: Number, min: 1, max: 5, default: null },
     driverFeedback: { type: String, default: '' },
 
+    fare: { type: Number },
     status: {
       type: String,
       enum: ['COMPLETED', 'CANCELLED', 'REJECTED'],
