@@ -85,6 +85,17 @@ const deleteUser = catchAsync(async (req: Request, res: Response, next: NextFunc
     })
 })
 
+const getSummary = catchAsync(async (req: Request, res: Response) => {
+
+    const summary = await RiderService.getSummary();
+
+    sendResponse(res, {
+        statusCode: statusCode.OK,
+        success: true,
+        message: 'data summary fetched successfully',
+        data: summary,
+    });
+})
 
 export const RiderController = {
     registetionRider,
@@ -92,5 +103,6 @@ export const RiderController = {
     getAllRiders,
     getSingleRider,
     updateUser,
-    deleteUser
+    deleteUser,
+    getSummary
 }

@@ -13,6 +13,8 @@ router.get('/my-profile', checkAuth(...Object.values(RiderRole)), RiderControlle
 
 router.get('/all-riders', checkAuth(RiderRole.ADMIN), RiderController.getAllRiders)
 
+router.get('/user-summary', checkAuth(RiderRole.ADMIN), RiderController.getSummary);
+
 router.get('/:id', checkAuth(RiderRole.ADMIN), RiderController.getSingleRider)
 
 router.patch('/:id', validateRequest(updateRiderZodSchema), checkAuth(...Object.values(RiderRole)), RiderController.updateUser)

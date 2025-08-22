@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import statusCode from "http-status-codes";
 import AppError from "../../errorHandle/appError";
 import { JwtPayload } from "jsonwebtoken";
+import { Ride } from "../rides/ride.model";
 
 const registetionRider = async (payload: Partial<IRider>) => {
     const { email, password, role, ...rest } = payload;
@@ -115,6 +116,51 @@ const deleteUser = async (userId: string, decodedToken: JwtPayload) => {
     return deleteUser;
 }
 
+const getSummary = async () => {
+    const totalRides = await Ride.countDocuments();
+
+    const totalCompletedRides = await Ride.countDocuments({ status: 'completed' });
+
+    const totalCancelledRides = await Ride.countDocuments({
+        status: { $in: ['cancelled_by_rider', 'cancelled_by_driver'] },
+    });
+
+    const riderCancelledCount = await Ride.countDocuments({ status: 'cancelled_by_rider' });
+    const driverCancelledCount = await Ride.countDocuments({ status: 'cancelled_by_driver' });
+    const adminCancelledCount = await Ride.countDocuments({ cancelledBy: 'admin' });
+
+    const cancellationTotal = riderCancelledCount + driverCancelledCount + adminCancelledCount;
+
+    const getPercentage = (count: number) =>
+        cancellationTotal > 0 ? ((count / cancellationTotal) * 100).toFixed(2) + '%' : '0%';
+
+    // ✅ Get users by role
+    const totalRiders = await Rider.countDocuments({ role: 'rider' });
+    const totalDrivers = await Rider.countDocuments({ role: 'driver' });
+
+    return {
+        totalRides,
+        totalCompletedRides,
+        totalCancelledRides,
+        totalRiders,
+        totalDrivers,
+        cancellations: {
+            rider: {
+                count: riderCancelledCount,
+                percentage: getPercentage(riderCancelledCount),
+            },
+            driver: {
+                count: driverCancelledCount,
+                percentage: getPercentage(driverCancelledCount),
+            },
+            admin: {
+                count: adminCancelledCount,
+                percentage: getPercentage(adminCancelledCount),
+            },
+        },
+    };
+}
+
 
 export const RiderService = {
     registetionRider,
@@ -122,5 +168,6 @@ export const RiderService = {
     getAllRiders,
     getSingleRider,
     updateUser,
-    deleteUser
+    deleteUser,
+    getSummary
 }
