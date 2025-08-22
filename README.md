@@ -35,6 +35,23 @@ The system supports three user roles: **Admin, Driver, and Rider**.
 
 ---
 
+## 📁 Project Structure
+
+src/
+├── modules/
+│   ├── auth/          # Authentication logic
+│   ├── riders/          # User management
+│   ├── driver/        # Driver operations
+│   ├── ride/          # Ride booking system
+│   ├── history/         # Riders and driver history
+├── middlewares/       # Auth, validation, location tracking
+├── routes/           # Route definitions
+├── errorHandle/           # Handle all errors
+├── utils/            # Helper functions
+└── config/          # Database and app configuration
+
+---
+
 ## 🧩 API Endpoints
 
 ### 📌 Authentication
@@ -178,5 +195,3 @@ Each status update logs a timestamp, and cancellation creates a separate state:
 | 🔒 Role Protection     | Route guards using JWT + role middleware                              |
 | 📝 Logging             | All ride statuses logged with timestamps                              |
 | 📊 Reports & Ratings   | Ratings + feedback stored per ride, history auto created               |
-
-
