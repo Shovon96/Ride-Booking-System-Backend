@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import AppError from "../../errorHandle/appError"
 import { IRider } from "../rider/rider.interface"
 import { Rider } from "../rider/rider.model"

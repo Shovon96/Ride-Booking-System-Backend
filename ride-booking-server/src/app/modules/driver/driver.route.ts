@@ -31,10 +31,5 @@ router.patch(
 
 router.post('/reject/:id', checkAuth(RiderRole.DRIVER), DriverController.rejectRide);
 
-// router.get("/total-earnings", (req, res, next) => {
-//   console.log('total earnings');
-//   checkAuth(RiderRole.DRIVER),
-//     DriverController.getDriverEarningsHistory(req, res, next);
-// });
 
 export const DriverRouter = router;

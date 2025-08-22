@@ -10,7 +10,15 @@ export default tseslint.config(
     tseslint.configs.stylistic,
     {
         rules: {
-            "no-console": "warn"
+            // Disable warning for `any`
+            '@typescript-eslint/no-explicit-any': 'off',
+
+            // Allow console usage
+            'no-console': 'off',
+
+            // Disable unused variable warnings
+            'no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-vars': 'off'
         }
     }
 );
