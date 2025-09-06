@@ -111,7 +111,7 @@ export default function Navbar() {
                     {/* User menu */}
                     <UserMenu />
                     {/* {!data?.data?.email && <Link to={"/login"}> */}
-                    <Button variant="default" className="cursor-pointer hover:bg-muted">Login</Button>
+                    <Button variant="default" className="cursor-pointer hover:bg-destructive">Login</Button>
                     {/* </Link>
                     }
                     {data?.data?.email &&
