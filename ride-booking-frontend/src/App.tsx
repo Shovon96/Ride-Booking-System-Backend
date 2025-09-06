@@ -1,11 +1,14 @@
-import { Button } from "@/components/ui/button"
+
+import { Outlet } from "react-router"
+import MainLayout from "./components/layout/MainLayout"
 
 function App() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <h1>Hello world!</h1>
-      <Button>Click me</Button>
-    </div>
+    <>
+      <MainLayout>
+        <Outlet />
+      </MainLayout>
+    </>
   )
 }
 
