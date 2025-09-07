@@ -31,7 +31,7 @@ import Password from "@/components/ui/Password";
 
 export default function RegistrationForm() {
     const location = useLocation();
-    const [role, setRole] = useState<Role>(location?.state ?? Role.RIDER);
+    const [role, setRole] = useState(location?.state ?? Role.RIDER);
 
     const form = useForm<RegistrationSchemaType>({
         resolver: zodResolver(registrationSchema),
@@ -66,21 +66,20 @@ export default function RegistrationForm() {
     }, [form.watch("role")]);
 
     const onSubmit = async (data: RegistrationSchemaType) => {
-        console.log("SUBMIT CALLED");
-        console.log(data);
-        toast.loading("Trying to create user....")
-
         try {
             const res = await register(data);
-            console.log(res)
-
+            console.log();
             if (res?.data?.statusCode === 201) {
-                toast.success("User created successfully");
+                toast.success(`${res?.data?.message}`, { duration: 5000 });
                 navigate("/login")
             }
 
             if (res?.data?.statusCode !== 201) {
-                toast.info(res?.data?.message);
+                const errorMessage =
+                    (res?.error && typeof res.error === "object" && "data" in res.error && (res.error as any).data?.message)
+                        ? (res.error as any).data.message
+                        : "Registration failed";
+                toast.info(errorMessage, { duration: 5000 });
             }
         }
         catch (error: unknown) {
@@ -179,9 +178,9 @@ export default function RegistrationForm() {
                                 <FormItem>
                                     <FormLabel>Select Your Role For Register</FormLabel>
                                     <Select
-                                        onValueChange={(val: Role) => {
-                                            field.onChange(val);
-                                            setRole(val);
+                                        onValueChange={(val: keyof typeof Role) => {
+                                            field.onChange(Role[val]);
+                                            setRole(Role[val]);
                                         }}
                                         value={field.value}
                                     >

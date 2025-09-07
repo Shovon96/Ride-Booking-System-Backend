@@ -9,27 +9,42 @@ const vehicleInfoSchema = z.object({
 
 export const registrationSchema = z.discriminatedUnion("role", [
     z.object({
-        role: z.literal(Role.RIDER),
-        name: z.string().min(1),
-        email: z.string().email(),
-        password: z.string().min(6),
+        role: z.literal(Role.RIDER || Role.ADMIN),
+        name: z.string().min(3, { error: "The name at least 3 characters long", }).max(50),
+        email: z.email(),
+        password: z.string()
+            .min(8, { message: "Password must be 8 character" })
+            .regex(/^(?=.*[A-Z])/, {
+                message: "Password must contain at least 1 uppercase letter.",
+            })
+            .regex(/^(?=.*[!@#$%^&*])/, {
+                message: "Password must contain at least 1 special character.",
+            })
+            .regex(/^(?=.*\d)/, {
+                message: "Password must contain at least 1 number.",
+            }),
         confirmPassword: z.string().min(6),
     }),
     z.object({
         role: z.literal(Role.DRIVER),
-        name: z.string().min(1),
-        email: z.string().email(),
-        password: z.string().min(6),
-        confirmPassword: z.string().min(6),
+        name: z.string().min(3, { error: "The name at least 3 characters long", }).max(50),
+        email: z.email(),
+        password: z.string()
+            .min(8, { message: "Password must be 8 character" })
+            .regex(/^(?=.*[A-Z])/, {
+                message: "Password must contain at least 1 uppercase letter.",
+            })
+            .regex(/^(?=.*[!@#$%^&*])/, {
+                message: "Password must contain at least 1 special character.",
+            })
+            .regex(/^(?=.*\d)/, {
+                message: "Password must contain at least 1 number.",
+            }),
+        confirmPassword: z
+            .string()
+            .min(8, { error: "Confirm Password must be at least 8 characters long" }),
         vehicleInfo: vehicleInfoSchema,
-    }),
-    z.object({
-        role: z.literal(Role.ADMIN),
-        name: z.string().min(1),
-        email: z.string().email(),
-        password: z.string().min(6),
-        confirmPassword: z.string().min(6),
-    }),
+    })
 ]).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
