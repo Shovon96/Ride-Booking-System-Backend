@@ -1,4 +1,5 @@
 import App from "@/App";
+import Login from "@/pages/Login";
 import { createBrowserRouter } from "react-router";
 
 export const routers = createBrowserRouter([
@@ -12,4 +13,8 @@ export const routers = createBrowserRouter([
             // }
         ]
     },
+    {
+        Component: Login,
+        path: "/login"
+    }
 ]);

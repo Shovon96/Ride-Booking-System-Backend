@@ -110,10 +110,11 @@ export default function Navbar() {
                     </div>
                     {/* User menu */}
                     <UserMenu />
-                    {/* {!data?.data?.email && <Link to={"/login"}> */}
-                    <Button variant="default" className="cursor-pointer hover:bg-destructive">Login</Button>
-                    {/* </Link>
-                    }
+                    {/* {!data?.data?.email &&  */}
+                    <Link to={"/login"}>
+                        <Button variant="default" className="cursor-pointer hover:bg-destructive">Login</Button>
+                    </Link>
+                    {/*   }
                     {data?.data?.email &&
                         <Button onClick={handleLogout} variant="outline" className="cursor-pointer hover:bg-muted">Logout</Button>
                     } */}
