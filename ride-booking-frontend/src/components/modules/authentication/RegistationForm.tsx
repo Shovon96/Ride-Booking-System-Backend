@@ -190,6 +190,7 @@ export default function RegistrationForm() {
                                         <SelectContent>
                                             <SelectItem value={Role.RIDER}>Rider</SelectItem>
                                             <SelectItem value={Role.DRIVER}>Driver</SelectItem>
+                                            <SelectItem value={Role.ADMIN}>Admin</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
