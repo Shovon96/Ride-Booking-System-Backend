@@ -15,8 +15,7 @@ import {
 import Logo from "@/assets/Logo"
 import { Link } from "react-router"
 import { ModeToggler } from "./ModeToggler"
-import { authApi, useLogoutMutation, useUseInfoQuery } from "@/redux/features/auth.api"
-import { useAppDispatch } from "@/redux/hook"
+import { useUseInfoQuery } from "@/redux/features/auth.api"
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -30,14 +29,6 @@ const navigationLinks = [
 export default function Navbar() {
 
     const { data } = useUseInfoQuery(undefined)
-    console.log("user data",data)
-    const [logout] = useLogoutMutation()
-    const dispatch = useAppDispatch()
-
-    const handleLogout = async () => {
-        await logout(undefined)
-        dispatch(authApi.util.resetApiState());
-    }
 
     return (
         <header className="border-b px-4 md:px-6 bg-header-foreground">
@@ -121,13 +112,12 @@ export default function Navbar() {
                         <ModeToggler />
                     </div>
                     {/* User menu */}
-                    <UserMenu />
                     {!data?.data?.email && <Link to={"/login"}>
-                        <Button variant="default" className="cursor-pointer hover:bg-muted">Login</Button>
+                        <Button variant="default" className="cursor-pointer hover:bg-destructive">Login</Button>
                     </Link>
                     }
                     {data?.data?.email &&
-                        <Button onClick={handleLogout} variant="outline" className="cursor-pointer hover:bg-muted">Logout</Button>
+                        <UserMenu />
                     }
                 </div>
             </div>

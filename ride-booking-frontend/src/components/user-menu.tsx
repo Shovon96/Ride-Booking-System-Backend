@@ -1,10 +1,5 @@
 import {
-  BoltIcon,
-  BookOpenIcon,
-  Layers2Icon,
   LogOutIcon,
-  PinIcon,
-  UserPenIcon,
 } from "lucide-react"
 
 import {
@@ -16,20 +11,31 @@ import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { authApi, useLogoutMutation, useUseInfoQuery } from "@/redux/features/auth.api"
+import { useAppDispatch } from "@/redux/hook"
 
 export default function UserMenu() {
+
+  const { data } = useUseInfoQuery(undefined)
+  const [logout] = useLogoutMutation()
+  const dispatch = useAppDispatch()
+
+  const handleLogout = async () => {
+    await logout(undefined)
+    dispatch(authApi.util.resetApiState());
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
+            <AvatarImage src="https://github.com/shadcn.png" alt="Profile image" />
             <AvatarFallback>KK</AvatarFallback>
           </Avatar>
         </Button>
@@ -37,42 +43,24 @@ export default function UserMenu() {
       <DropdownMenuContent className="max-w-64" align="end">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
-            Keith Kennedy
+            {data?.data?.name}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
-            k.kennedy@originui.com
+            {data?.data?.email}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 1</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 2</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 3</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <PinIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 4</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 5</span>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        <DropdownMenuLabel className="flex min-w-0 flex-col">
+          <span className="text-foreground truncate text-sm font-medium">
+            You are a <span className="capitalize text-primary"> {data?.data?.role}</span>
+          </span>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
-          <span>Logout</span>
+          <Button onClick={handleLogout} variant="outline" className="cursor-pointer hover:bg-muted">
+            <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
+            Logout
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
