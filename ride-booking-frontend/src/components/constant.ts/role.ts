@@ -4,3 +4,5 @@ export const Role = {
     RIDER: "RIDER",
     DRIVER: "DRIVER"
 }
+
+export type IRole = "ADMIN" | "DRIVER" | "RIDER"
