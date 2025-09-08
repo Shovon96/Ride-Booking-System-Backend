@@ -1,4 +1,5 @@
 import {
+  BikeIcon,
   LogOutIcon,
 } from "lucide-react"
 
@@ -18,6 +19,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { authApi, useLogoutMutation, useUseInfoQuery } from "@/redux/features/auth.api"
 import { useAppDispatch } from "@/redux/hook"
+import { Role } from "./constant.ts/role"
+import { Link } from "react-router"
 
 export default function UserMenu() {
 
@@ -33,7 +36,7 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
+        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent cursor-pointer">
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" alt="Profile image" />
             <AvatarFallback>KK</AvatarFallback>
@@ -55,6 +58,23 @@ export default function UserMenu() {
             You are a <span className="capitalize text-primary"> {data?.data?.role}</span>
           </span>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {data?.data?.role === Role.RIDER &&
+          <div>
+            <Link to={"/take-ride"}>
+              <DropdownMenuItem className="cursor-pointer">
+                <BikeIcon size={16} className="opacity-60" aria-hidden="true" />
+                <span>Take a Ride</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link to={"/ride-history"}>
+              <DropdownMenuItem className="cursor-pointer">
+                <BikeIcon size={16} className="opacity-60" aria-hidden="true" />
+                <span>Ride History</span>
+              </DropdownMenuItem>
+            </Link>
+          </div>
+        }
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Button onClick={handleLogout} variant="outline" className="cursor-pointer hover:bg-muted">
