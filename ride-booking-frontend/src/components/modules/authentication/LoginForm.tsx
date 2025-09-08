@@ -27,18 +27,12 @@ export function LoginForm({
         try {
             const res = await login(data).unwrap();
             if (res.success) {
-                toast.success("Login Successful");
+                toast.success("Login Successful", {duration: 5000});
                 navigate("/");
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-
-            if ((err as any).data.message === "Password dose not matched!!") {
-                toast.error("Password does not match");
-            } else if ((err as any).status === 401) {
-                toast.error("Your account is not verified");
-                navigate("/verify", { state: data.email });
-            }
+            toast.error(`${err.data.message}`, { duration: 5000 });
         }
     };
 
