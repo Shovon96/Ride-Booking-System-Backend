@@ -17,8 +17,8 @@ export const socketFunction = async ( app: Application )=>
     
             // Attach Socket.IO
     const io = new SocketIOServer( server, {
-        // cors: { origin: "https://choloride-frontend.vercel.app" },
-        cors: { origin: "http://localhost:5173" },
+        cors: { origin: "https://choloride-frontend.vercel.app" },
+        // cors: { origin: "http://localhost:5173" },
     } );
     
     io.on( "connection", ( socket: Socket ) =>
