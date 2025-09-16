@@ -1,4 +1,6 @@
-# 🚕 Ride System Backend API
+# 🚕 Ride Booking System Backend
+
+## Backend Live Link: https://choloride-backend.vercel.app
 
 A **scalable ride-booking backend system** built with **TypeScript, Express.js, MongoDB (Mongoose)**, featuring:
 
@@ -268,73 +270,6 @@ curl -X PATCH http://localhost:5000/api/admin/approve-driver/456/approved \
 
 ---
 
-## 🔍 Validation Schemas (Zod)
-
-### User Registration Schema
-```typescript
-const zodUserSchema = z.object({
-  name: z.string().min(2).max(50),
-  email: z.string().email(),
-  password: z.string()
-    .min(8)
-    .regex(/^(?=.*[A-Z])/, "Must contain uppercase letter")
-    .regex(/^(?=.*[!@#$%^&*])/, "Must contain special character")
-    .regex(/^(?=.*\d)/, "Must contain number"),
-  role: z.enum(["admin", "driver", "rider"]),
-  vehicleInfo: z.object({
-    license: z.string().min(1),
-    model: z.string().min(1),
-    plateNumber: z.string().min(1)
-  }).optional(),
-  driverStatus: z.enum(["AVAILABLE", "BUSY", "OFFLINE"]).optional()
-});
-```
-
-### Ride Request Schema
-```typescript
-const zodRideRequest = z.object({
-  lat: z.number().min(-90).max(90),
-  lng: z.number().min(-180).max(180)
-});
-```
-
-### Rating Schema
-```typescript
-const ratingZodSchema = z.object({
-  rating: z.number().min(1).max(5)
-});
-```
-
-### Vehicle Update Schema
-```typescript
-const vehicleInfoZodSchema = z.object({
-  license: z.string().min(1).optional(),
-  model: z.string().min(1).optional(),
-  plateNumber: z.string().min(1).optional()
-}).refine(
-  data => Object.keys(data).some(key => data[key] !== undefined),
-  "At least one field must be provided for update"
-);
-```
-
-### User Update Schema
-```typescript
-const updateUserZodSchema = z.object({
-  name: z.string().min(2).max(50).optional(),
-  password: z.string()
-    .min(8)
-    .regex(/^(?=.*[A-Z])/, "Must contain uppercase letter")
-    .regex(/^(?=.*[!@#$%^&*])/, "Must contain special character")
-    .regex(/^(?=.*\d)/, "Must contain number")
-    .optional()
-}).refine(
-  data => Object.values(data).some(val => val !== undefined),
-  "At least one field must be provided for update"
-);
-```
-
----
-
 ## 📍 Location Tracking System
 
 ### How It Works
@@ -426,7 +361,7 @@ scheduleUserOfflineJob(); // Runs via cron
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd ride-system-backend
+cd <your folder>
 
 # Install dependencies
 npm install
@@ -602,19 +537,5 @@ npm run lint:fix     # Auto-fix issues
 4. **Error Handling**: Robust error management
 5. **Session Management**: Secure user sessions
 6. **Location Tracking**: Continuous location updates
-
----
-
-## 🧑‍💻 Author
-
-## Github Link : https://github.com/muhamash/Ride-Booking-System
-## Live Link : https://ride-booking-system-one.vercel.app/
-## Doc : https://github.com/muhamash/Ride-Booking-System/blob/main/Readme.md
-## Video Link : https://drive.google.com/file/d/1cerBYwSgy2ppYLXFuxnJ01pd9nSPCKh6/view?usp=sharing
-
-**Muhammad Ashraful**  
-Full-Stack Software engineer  
-📧 Contact: muhammad-ashraful@outlook.com 
-🔗 GitHub: github.com/muhamash
 
 ---
